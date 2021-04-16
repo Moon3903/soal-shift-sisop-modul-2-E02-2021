@@ -30,10 +30,10 @@ void makeProgramKiller(char *projectPath,int daemonSID){
     FILE *fileout;
     char fileKiller[100];
     strcpy(fileKiller,projectPath);
-    strcat(fileKiller,"killer.sh");
+    strcat(fileKiller,"Killer.sh");
     fileout = fopen(fileKiller,"w");
     fputs("#!/bin/bash\n",fileout);
-    fprintf(fileout,"pkill -9 -s %d\n",daemonSID);
+    fprintf(fileout,"pkill -15 -s %d\n",daemonSID);
     fprintf(fileout,"rm %s\n",fileKiller);
     fclose(fileout);
 
