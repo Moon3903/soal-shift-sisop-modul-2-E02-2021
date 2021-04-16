@@ -26,22 +26,26 @@ char* caesarChiper(const char* text, int shift){
     return encrypt;
 }
 
-void makeKiller(char *projectPath,int daemonPID, int childPID, int childPID2){
+void makeProgramKiller(char *projectPath,int daemonSID){
     FILE *fileout;
     char fileKiller[100];
     strcpy(fileKiller,projectPath);
     strcat(fileKiller,"killer.sh");
     fileout = fopen(fileKiller,"w");
     fputs("#!/bin/bash\n",fileout);
-    fprintf(fileout,"kill -9 %d\n", daemonPID);
-    if(childPID > 0){
-        fprintf(fileout,"kill -9 %d\n", childPID);
-    }
-    if(childPID2 > 0){
-        fprintf(fileout,"kill -9 %d\n", childPID2);
-    }
+    fprintf(fileout,"pkill -9 -s %d\n",daemonSID);
     fprintf(fileout,"rm %s\n",fileKiller);
     fclose(fileout);
+
+    pid_t childID = fork();
+    if(childID < 0) exit(EXIT_FAILURE);
+    else if(childID == 0){
+        char *args[] = {"chmod", "+x", fileKiller, NULL};
+        execv("/bin/chmod",args);
+    }else{
+        int status;
+        while((wait(&status)) > 0);
+    }
 }
 
 int main(int argc, char *argv[]){
@@ -67,10 +71,9 @@ int main(int argc, char *argv[]){
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
 
-    int daemonPID = (int)getpid();
-    
     char projectPath[100];
     strcpy(projectPath,"/home/ryan/Documents/soal-shift-sisop-modul-2-E02-2021/soal3/");
+    makeProgramKiller(projectPath, childSID);
 
     while(1){
 
@@ -78,8 +81,9 @@ int main(int argc, char *argv[]){
 
         if(child1 < 0) exit(EXIT_FAILURE);
         else if(child1 == 0){
-            int child1PID = (int)getpid();
-            makeKiller(projectPath, daemonPID, child1PID, -1);
+            if(argc == 2 && strcmp(argv[1],"-x") == 0){
+                int child1SID = setsid();
+            }
 
             time_t t = time(NULL);
             struct tm *tm = localtime(&t);
@@ -90,19 +94,12 @@ int main(int argc, char *argv[]){
             strcpy(folderPath,projectPath);
             strcat(folderPath,folderName);
 
-
             pid_t child2 = fork();
 
             if(child2 < 0) exit(EXIT_FAILURE);
             else if(child2 == 0){
-                if(argc == 2 && strcmp(argv[1],"-x") == 0){
-                    kill(daemonPID,SIGKILL);
-                }
-                makeKiller(projectPath, daemonPID, child1PID,(int)getpid());
-                printf("%s\n", folderPath);
                 char *args[] = {"mkdir", "-p", folderPath, NULL};
                 execv("/bin/mkdir", args);
-
             }else{
                 int status;
                 while((wait(&status))>0);
@@ -111,7 +108,6 @@ int main(int argc, char *argv[]){
 
                 if(child3 < 0) exit(EXIT_FAILURE);
                 else if(child3 == 0){
-                    makeKiller(projectPath, daemonPID, child1PID,(int)getpid());
                     for(int i = 0; i < 10; i++){
                         pid_t child4 = fork ();
                         if(child4 < 0) exit(EXIT_FAILURE);
@@ -147,22 +143,17 @@ int main(int argc, char *argv[]){
                     fputs(caesarChiper("Download Success",5),fileout);
                     fclose(fileout);
 
-
                     pid_t child5 = fork();
                     if(child5 < 0) exit(EXIT_FAILURE);
                     else if(child5 == 0){
-                        makeKiller(projectPath, daemonPID, child1PID,(int)getpid());
                         chdir(projectPath);
                         char *args[] = {"zip", "-rm" , folderPath, folderName, NULL};
                         execv("/usr/bin/zip",args);    
                     }else{
                         int status3;
                         while((wait(&status3)) > 0);
-                        makeKiller(projectPath,daemonPID,-1,-1);
                     }
-
                 }
-
             }
             exit(EXIT_SUCCESS);
         }else{
@@ -170,8 +161,6 @@ int main(int argc, char *argv[]){
             while((wait(&status4)) > 0);
             sleep(40);
         }
-
     }
-
     return 0;
 }
