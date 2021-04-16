@@ -223,6 +223,11 @@ while(1){
 	...
 ```
 
+### Hasil
+- Mode pertama
+![Mode1](https://user-images.githubusercontent.com/68326540/115038022-52e95200-9ef9-11eb-92ff-f0bf8c7b8193.png)
+- Mode kedua
+![Mode2](https://user-images.githubusercontent.com/68326540/115038220-83c98700-9ef9-11eb-929b-69d17d111886.png)
 
 
 
