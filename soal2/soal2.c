@@ -133,7 +133,7 @@ void sisanya(){
                 teh(nama,jenis,dent->d_name);
                 keterangan(nama,umur,jenis);
 
-                if(dent->d_name[i+1]=='j'){
+                if(dent->d_name[i]!='_'){
                     hapus(dent->d_name);
                     break;
                 }
