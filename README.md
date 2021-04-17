@@ -235,6 +235,16 @@ void hapus(char nama[]){
     }while ((wait(&status)) > 0);
 }
 ```
+### Hasil
+Run:
+![Screenshot from 2021-04-17 12-15-46](https://user-images.githubusercontent.com/62832487/115102711-c9786500-9f76-11eb-98fe-360682831e27.png)
+Folder `/home/moon/modul2/petshop` :
+![Screenshot from 2021-04-17 12-15-56](https://user-images.githubusercontent.com/62832487/115102722-e0b75280-9f76-11eb-8d42-caf922ff7a17.png)
+Isi folder `petshop/cat` :
+![Screenshot from 2021-04-17 12-16-02](https://user-images.githubusercontent.com/62832487/115102732-faf13080-9f76-11eb-88f7-f68baf0e09b8.png)
+Isi file `petshop/cat/keterangan.txt` :
+![Screenshot from 2021-04-17 12-16-14](https://user-images.githubusercontent.com/62832487/115102739-0b091000-9f77-11eb-9829-454728a7afb4.png)
+</br>
 # Soal 3
 ## Penjelasan
 a) Membuat sebuah program C untuk membuat direktori setiap 40 detik dengan format nama [YYYY-mm-dd_HH:ii:ss]  </br>
