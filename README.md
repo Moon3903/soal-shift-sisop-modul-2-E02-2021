@@ -15,11 +15,14 @@
 # Soal 1
 ## Penjelasan
 a) Membuat 3 folder dengan nama Musyik, Fylm, dan Pyoto </br>
-b) Mendownload gambar, musik, dan film dari link yang disediakan. Foto: https://drive.google.com/file/d/1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD/view, Musik: https://drive.google.com/file/d/1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J/view, dan Film: https://drive.google.com/file/d/1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp/view.   </br>
+b) Mendownload gambar, musik, dan film dari link yang disediakan. <br>
+Foto: https://drive.google.com/file/d/1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD/view, <br>
+Musik: https://drive.google.com/file/d/1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J/view <br>
+Film: https://drive.google.com/file/d/1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp/view.  </br>
 c) Mengekstrak hasil download </br>
 d) Memindahkan hasil ekstrak ke folder (file saja yang dipindahkan) </br>
 e) Poin 1a-1d dilakukan secara otomatis 6 jam sebelum ulang tahun Stevany </br>
-f) Melakukan zip semua folder dan menghapus folder (hanya tersisa file zip)
+f) Melakukan zip semua folder dan menghapus folder (hanya tersisa file zip) pada saat ulang tahun Stevany (9 April 22:22 WIB)
 
 ## Penyelesaian
 ### Membuat Daemon Process
@@ -102,7 +105,7 @@ void unzip(char *fileName, char *projectPath){
     }
 }
 ```
-
+Fungsi ini dipanggil setelah proses download selesai. Sebelum melakukan ekstrak harus menuliskan path file yang akan diekstrak secara lengkap. Untuk melakukan ekstrak dapat menggunakan fork dan execv dengan perintah unzip, argumen ``-d`` untuk mengatur direktori file hasil ekstrak.
 ### soal 1d
 ```
 void moveFolderContent(char *folderName, char *projectPath, char *folderDest){
@@ -150,6 +153,8 @@ void moveFolderContent(char *folderName, char *projectPath, char *folderDest){
     }
 }
 ```
+Fungsi untuk memindahkan isi dari masing-masing folder hasil ekstrak ke folder yang telah dibuat sebelumnya. Memerlukan directory listing untuk mendapatkan nama file yang ada di dalam folder hasil ekstrak. Kemudian memindahkan file dengan path yang telah dituliskan secara lengkap ke folder tujuan.  untuk memindahkan file dapat menggunakan fork dan execv dengan perintah ``mv``.
+
 
 ### Soal 1e
 ```c
@@ -169,7 +174,7 @@ void moveFolderContent(char *folderName, char *projectPath, char *folderDest){
 	...
 }
 ```
-
+Mengambil bulan,tanggal,jam,menit, dan detik saat ini dengan menggunakan ``time_t``. Kemudian cek apakah waktu saat ini adalah ``9 April 16:22:00``. Jika ya, maka seluruh perintah dari soal 1a hingga soal 1d akan dijalankan. 
 
 ### Soal 1f
 ```c
@@ -199,6 +204,8 @@ while(1){
 
 }
 ```
+Mengambil bulan,tanggal,jam,menit, dan detik saat ini dengan menggunakan ``time_t``. Kemudian cek apakah waktu saat ini adalah ``9 April 16:22:00``. Jika ya, maka akan menjalan perintah zip. Untuk melakukan zip folder dan menghapus semua folder dapat menggunakan fork dan execv dengan perintah ``zip``, argumen ``-rm`` agar dapat melakukan zip seluruh isi folder, argumen berikutnya adalah nama zip yang akan dibuat, argumen setelahnya merupakan nama folder yang akan dizip.
+
 
 # Soal 2
 ## Penjelasan
