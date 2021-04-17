@@ -47,7 +47,7 @@ int main() {
 ```
 ### Soal 2a
 Pertama membuat directory `/home/[user]/modul2/petshop` terlebih dahulu dengan mempassing parameter ke `bin/mkdir`</br>
-setelah itu di diekstrak dengan unzip pada `/usr/bin/unzip` dengan mempassing beberapa parameter yaitu perintah unzip `unzip`, lalu destination folder dengan `-d` dan `zip_dest`, ada parameter `-oqq` o disini untuk overwrite tanpa persetujuan dan qq adalah very silent mode jadi tidak ada output pada terminal, dan parameter terakhit adalah `zip_loc` atau lokasi file zip nya
+setelah itu di diekstrak dengan unzip pada `/usr/bin/unzip` dengan mempassing beberapa parameter yaitu perintah unzip `unzip`, lalu destination folder dengan `-d` dan `zip_dest`, ada parameter `-oqq` o disini untuk overwrite tanpa persetujuan dan qq adalah very silent mode jadi tidak ada output pada terminal, dan parameter terakhir adalah `zip_loc` atau lokasi file zip nya
 ```c
 void iniA(){
     pid_t child_id;
@@ -74,7 +74,7 @@ void iniA(){
     printf("Decompressed\n");
 }
 ```
-setelah di ekstrak selanjutnya adalah menghapus file dan folder yang tidak perlu, karena semua filenya adalah .jpg maka selain format tersebut akan dihapus, penghapusan menggunakan library `<dirent.h>` lalu menggunakan fungsi `opendir()` dan `readdir` untuk mengtransverse folder tersebut jika ditemukan yang bukan .jpg maka di hapus dengan `/bin/rm` dengan param `rm` `-rf` dan `path` ke file/folder nya
+setelah diekstrak selanjutnya adalah menghapus file dan folder yang tidak perlu, karena semua filenya adalah .jpg maka selain format tersebut akan dihapus, penghapusan menggunakan library `<dirent.h>` lalu menggunakan fungsi `opendir()` dan `readdir` untuk mengtransverse folder tersebut jika ditemukan yang bukan .jpg maka di hapus dengan `/bin/rm` dengan param `rm` `-rf` dan `path` ke file/folder nya
 ```c
 void delFolder(){
     struct stat file_stats;
