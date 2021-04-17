@@ -210,7 +210,7 @@ void teh(char nama[],char jenis[],char fname[]){
 ```
 setelah itu di cek apakah ada hewan lain difoto tersebut atau tidak dengan 
 ```c
-if(dent->d_name[i+1]=='j'){
+if(dent->d_name[i]!='_'){
     hapus(dent->d_name);
     break;
 }
