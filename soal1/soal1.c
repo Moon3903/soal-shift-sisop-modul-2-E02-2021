@@ -9,6 +9,7 @@
 #include <syslog.h>
 #include <time.h>
 #include <wait.h>
+#include <dirent.h>
 
 void download(char *source, char *projectPath, char *fileName){
     pid_t child = fork();
@@ -25,24 +26,67 @@ void download(char *source, char *projectPath, char *fileName){
     }
 }
 
-void unzip(char *fileName, char *projectPath, char *folderName){
+void unzip(char *fileName, char *projectPath){
     pid_t child = fork();
     if(child < 0) exit(EXIT_FAILURE);
     else if(child == 0){
-        char filePath[150], destPath[150];
+        char filePath[150];
         strcpy(filePath,projectPath);
         strcat(filePath,fileName);
 
-        strcpy(destPath, projectPath);
-        strcat(destPath, folderName);
-
-        char *args[] = {"unzip","-j", filePath, "-d", destPath, NULL};
+        char *args[] = {"unzip", filePath, "-d", projectPath, NULL};
         execv("/usr/bin/unzip",args);
     }else{
         int status;
         while((wait(&status)) > 0);
     }
 }
+
+void moveFolderContent(char *folderName, char *projectPath, char *folderDest){
+    pid_t child = fork();
+    if(child < 0) exit(EXIT_FAILURE);
+    else if(child == 0){
+        DIR *dp;
+        struct dirent *ep;
+        
+        char folderPath[150];
+        strcpy(folderPath,projectPath);
+        strcat(folderPath,folderName);
+        strcat(folderPath,"/");
+
+        dp = opendir(folderPath);
+
+        if(dp != NULL){
+            
+
+            char folderDestPath[150];
+            strcpy(folderDestPath,projectPath);
+            strcat(folderDestPath,folderDest);
+            strcat(folderDestPath,"/");
+
+            while ((ep = readdir (dp))){
+                char filePath[150];
+                strcpy(filePath,folderPath);
+                strcat(filePath,ep->d_name);
+
+                pid_t child2 = fork();
+                if(child2 < 0) exit(EXIT_FAILURE);
+                else if(child2 == 0){
+                    char *args[] = {"mv",filePath,folderDestPath,NULL};
+                    execv("/bin/mv",args);
+                }else{
+                    int status2;
+                    while((wait(&status2)) > 0);
+                }
+            }
+        }
+
+    }else{
+        int status;
+        while((wait(&status)) > 0);
+    }
+}
+
 
 int main(){
     pid_t child, childSID;
@@ -97,9 +141,12 @@ int main(){
                 download("https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download",projectPath,"Foto_for_Stevany.zip");
                 download("https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download",projectPath,"Musik_for_Stevany.zip");
                 download("https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download",projectPath,"Film_for_Stevany.zip");
-                unzip("Foto_for_Stevany.zip",projectPath,"Pyoto");
-                unzip("Musik_for_Stevany.zip",projectPath,"Musyik");
-                unzip("Film_for_Stevany.zip",projectPath,"Fylm");
+                unzip("Foto_for_Stevany.zip",projectPath);
+                unzip("Musik_for_Stevany.zip",projectPath);
+                unzip("Film_for_Stevany.zip",projectPath);
+                moveFolderContent("FOTO",projectPath,"Pyoto");
+                moveFolderContent("MUSIK",projectPath,"Musyik");
+                moveFolderContent("FILM",projectPath,"Fylm");
             }
         }
 
@@ -108,7 +155,7 @@ int main(){
             if(child2 < 0) exit(EXIT_FAILURE);
             else if(child2 == 0){
                 chdir(projectPath);
-                char *args[] = {"zip", "-rm","Lopyu_Stevany.zip", "Fylm/", "Musyik/", "Pyoto/", NULL};
+                char *args[] = {"zip", "-rm","Lopyu_Stevany.zip", "Fylm/", "Musyik/", "Pyoto/", "FILM/", "MUSIK/", "FOTO/", NULL};
                 execv("/usr/bin/zip",args);    
             }else{
                 int status;
