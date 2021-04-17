@@ -19,8 +19,222 @@
 
 # Soal 2
 ## Penjelasan
-## Penyelesaian
+a) Mengekstrak zip pets.zip ke `/home/[user]/modul2/petshop` dan menghapus folder yang tidak di butuhkan </br>
+b) Foto peliharaan dikategorikan sesuai jenis kedalam folder yang sama misal jenis cat dimasukkan kedalam folder `petshop/cat` </br>
+c) Memindahkan foto kedalam folder jenis yang sesuai dan file direname sesuai nama peliharaan misal `petshop/cat/neko.jpg` </br>
+d) Foto dapat mengandung lebih dari satu peliharaan maka harus di masukkan kedalam kategori yang sesuai misal `dog;baro;1_cat;joni;2.jpg` menjadi `/petshop/cat/joni.jpg` dan `/petshop/dog/baro.jpg` </br>
+e) Disetiap folder harus ada file `keterangan.txt` yang berisi nama dan umur peliharaan dengan format
+```
+nama : joni
+umur  : 3 tahun
 
+nama : miko
+umur  : 2 tahun
+
+```
+</br>
+
+## Penyelesaian
+Pada Main akan memanggil 3 fungsi yaitu fungsi `iniA()` untuk mengekstrak lalu `delFolder()` untuk menghapus folder yang tidak diperlukan dan `sisanya()` untuk menyelesaikan point b-e
+```c
+int main() {
+    iniA();
+    delFolder();
+    sisanya();
+
+    printf("aman\n");
+}
+```
+### Soal 2a
+Pertama membuat directory `/home/[user]/modul2/petshop` terlebih dahulu dengan mempassing parameter ke `bin/mkdir`</br>
+setelah itu di diekstrak dengan unzip pada `/usr/bin/unzip` dengan mempassing beberapa parameter yaitu perintah unzip `unzip`, lalu destination folder dengan `-d` dan `zip_dest`, ada parameter `-oqq` o disini untuk overwrite tanpa persetujuan dan qq adalah very silent mode jadi tidak ada output pada terminal, dan parameter terakhit adalah `zip_loc` atau lokasi file zip nya
+```c
+void iniA(){
+    pid_t child_id;
+    int status;
+
+    char zip_loc[100] = "pets.zip";
+    char zip_dest[100] = "/home/moon/modul2/petshop";
+
+
+    child_id = fork();
+
+    if (child_id == 0) {
+        char *argv[] = {"mkdir", "-p", zip_dest, NULL};
+        execv("/bin/mkdir", argv);
+    } while ((wait(&status)) > 0);
+    printf("PATH CREATED\n");
+
+    child_id = fork();
+
+    if (child_id == 0) {
+        char *argv[] = {"unzip", "-d", zip_dest,"-oqq", zip_loc, NULL};
+        execv("/usr/bin/unzip", argv);
+    } while ((wait(&status)) > 0);
+    printf("Decompressed\n");
+}
+```
+setelah di ekstrak selanjutnya adalah menghapus file dan folder yang tidak perlu, karena semua filenya adalah .jpg maka selain format tersebut akan dihapus, penghapusan menggunakan library `<dirent.h>` lalu menggunakan fungsi `opendir()` dan `readdir` untuk mengtransverse folder tersebut jika ditemukan yang bukan .jpg maka di hapus dengan `/bin/rm` dengan param `rm` `-rf` dan `path` ke file/folder nya
+```c
+void delFolder(){
+    struct stat file_stats;
+    DIR *dirp;
+    struct dirent* dent;
+    pid_t child_id;
+    int status;
+
+    char path[200] = "/home/moon/modul2/petshop";
+    dirp=opendir(path);
+    do {
+        dent = readdir(dirp);
+        if (dent)
+        {
+            char tmp[100],hapus[200];
+            strcpy(tmp,dent->d_name);
+            if(strlen(tmp)<3){
+                continue;
+            }
+            int len = strlen(tmp);
+            if(tmp[len-3]=='j' && tmp[len-2]=='p' && tmp[len-1]=='g'){
+                continue;
+            }
+            else{
+                strcpy(hapus,path);
+                strcat(hapus,"/");
+                strcat(hapus,tmp);
+                printf("DELETED : %s\n",hapus);
+                child_id = fork();
+
+                if (child_id == 0) {
+                    char *argv[] = {"rm", "-rf", hapus, NULL};
+                    execv("/bin/rm", argv);
+                } while ((wait(&status)) > 0);
+            }
+        }
+    } while (dent);
+    closedir(dirp);
+}
+```
+### Soal 2b - 2e
+```c
+void sisanya(){
+    struct stat file_stats;
+    DIR *dirp;
+    struct dirent* dent;
+
+    char jenis[100],nama[100],umur[100];
+    int i,x;
+
+    dirp=opendir("/home/moon/modul2/petshop");
+    do {
+        dent = readdir(dirp);
+        if (dent)
+        {   
+            if((strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0)){
+                continue;
+            }
+            i = 0;
+            while(1){
+
+                x = 0;
+                while(dent->d_name[i]!=';'){
+                    jenis[x] = dent->d_name[i];
+                    x++;
+                    i++;
+                }
+                jenis[x]='\0';
+
+                i++;
+                x = 0;
+                while(dent->d_name[i]!=';'){
+                    nama[x] = dent->d_name[i];
+                    x++;
+                    i++;
+                }
+                nama[x]='\0';
+
+                i++;
+                x=0;
+                while(dent->d_name[i+1]!='j' && dent->d_name[i]!='_'){
+                    umur[x] = dent->d_name[i];
+                    x++;
+                    i++;
+                }
+                umur[x] = '\0';
+
+                teh(nama,jenis,dent->d_name);
+                keterangan(nama,umur,jenis);
+
+                if(dent->d_name[i+1]=='j'){
+                    hapus(dent->d_name);
+                    break;
+                }
+                i++;
+            }
+        }
+    } while (dent);
+    closedir(dirp);
+}
+```
+Pertama adalah mendapatkan nama jenis dan umur dari hewan tersebut dengan menggunakan `<dirent.h>`, `opendir()`, dan `readdir` yang setelah itu di looping. Setelah itu memanggil fungsi `teh()` untuk mengcopy file kedalam jenis yang sesuai dengan format nama yang benar dengan menggunakan `/bin/mkdir` untuk membuat directory dan `/bin/cp` untuk mengcopy filenya
+```c
+void teh(char nama[],char jenis[],char fname[]){
+    char dest[200],source[200];
+    pid_t child_id;
+    int status;
+
+    strcpy(source,"/home/moon/modul2/petshop/");
+    strcat(source,fname);
+
+    strcpy(dest,"/home/moon/modul2/petshop/");
+    strcat(dest,jenis);
+
+    child_id = fork();
+
+    if (child_id == 0) {
+        char *argv[] = {"mkdir", "-p", dest, NULL};
+        execv("/bin/mkdir", argv);
+    }while ((wait(&status)) > 0);
+
+    strcat(dest,"/");
+    strcat(dest,nama);
+    strcat(dest,".jpg");
+    // printf("\n%s %s\n",source,dest);
+    child_id = fork();
+
+    if (child_id == 0) {
+        char *argv[] = {"cp", "-b", source,dest, NULL};
+        execv("/bin/cp", argv);
+    }while ((wait(&status)) > 0);
+}
+```
+setelah itu di cek apakah ada hewan lain difoto tersebut atau tidak dengan 
+```c
+if(dent->d_name[i+1]=='j'){
+    hapus(dent->d_name);
+    break;
+}
+```
+dimana jika if tersebut bernilai true maka tidak ada hewan lain lalu file tersebut dihapus, namun jika masih ada hewan lain kembali mengambil nama, jenis, dan umur kembali sampai tidak ada hewan yang belum dimasukkan dalam foto tersebut.</br>
+untuk proses penghapusan sendiri menggunakan `/bin/rm` dengan mempassing parameter `rm` `-f` dan `path` filenya
+```c
+void hapus(char nama[]){
+    pid_t child_id;
+    int status;
+    
+    char path[200];
+    
+    strcpy(path,"/home/moon/modul2/petshop/");
+    strcat(path,nama);
+    
+    child_id = fork();
+
+    if (child_id == 0) {
+        char *argv[] = {"rm", "-f", path, NULL};
+        execv("/bin/rm", argv);
+    }while ((wait(&status)) > 0);
+}
+```
 # Soal 3
 ## Penjelasan
 a) Membuat sebuah program C untuk membuat direktori setiap 40 detik dengan format nama [YYYY-mm-dd_HH:ii:ss]  </br>
@@ -33,7 +247,7 @@ e) Program dapat dijalankan dengan dua mode. Mode pertama dengan argumen -z, ket
 ## Penyelesaian
 
 ### Membuat Daemon Process
-```
+```c
 pid_t child, childSID;
 
 child = fork();
@@ -55,7 +269,7 @@ close(STDERR_FILENO);
 Untuk menyelesaikan soal ini diperlukan proses yang dapat berjalan di background sehingga harus membuat daemon process terlebih dahulu.
 
 ### Soal 3a)
-```
+```c
 while(1){
 
 	pid_t child1 = fork();
@@ -93,7 +307,7 @@ Untuk membuat folder sesuai dengan format, dapat menggunakan fork, execv, dan fu
 
 
 ### Soal 3b)
-```
+```c
 else{
 int status;
 while((wait(&status))>0);
@@ -130,7 +344,7 @@ Sebelum mengunduh gambar, harus melakukan ``wait`` untuk memastikan folder sudah
 
 
 ### Soal 3c)
-```
+```c
 char* caesarChiper(const char* text, int shift){ 
     char *encrypt = (char*)calloc(sizeof(char),20);
     strcpy(encrypt, text);
@@ -149,7 +363,7 @@ char* caesarChiper(const char* text, int shift){
 Fungsi ``caesarChiper`` akan mereturn hasil enkripsi sesuai dengan kata dan shift yang diberikan.
 
 
-```
+```c
 else{
     int status2;
     while((wait(&status2)) > 0);
@@ -179,7 +393,7 @@ Sebelum membuat ``status.txt`` harus melakukan ``wait`` untuk memastikan proses 
 
 
 ### Soal 3d)
-```
+```c
 void makeProgramKiller(char *projectPath,int daemonSID){
     FILE *fileout;
     char fileKiller[100];
@@ -208,7 +422,7 @@ Unutk men-generate program Killer, menggunakan ``FILE`` pada C yang akan menulis
 ### Soal 3e)
 - Mode pertama ``-z`` sudah terselesaikan pada soal 3d).
 - Mode kedua ``-x`` Karena pada soal 3d) menggunakan ``pkill -15 -s`` untuk melakukan terminasi berdasarkan Session ID (SID), maka agar proses di direktori bisa tetap berjalan harus melakukan fork dimana child harus memiliki SID yang berbeda dengan SID dari daemon process. Dengan demikian, jika program Killer dijalankan child tersebut akan menjadi tumpuan menggantikan daemon process. Berikut ini adalah potongan kodenya
-```
+```c
 while(1){
 
 	pid_t child1 = fork();
