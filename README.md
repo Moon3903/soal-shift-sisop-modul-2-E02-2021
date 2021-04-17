@@ -243,7 +243,7 @@ Folder `/home/moon/modul2/petshop` :
 Isi folder `petshop/cat` :
 ![Screenshot from 2021-04-17 12-16-02](https://user-images.githubusercontent.com/62832487/115102732-faf13080-9f76-11eb-88f7-f68baf0e09b8.png)
 Isi file `petshop/cat/keterangan.txt` :
-![Screenshot from 2021-04-17 12-16-14](https://user-images.githubusercontent.com/62832487/115102739-0b091000-9f77-11eb-9829-454728a7afb4.png)
+![Screenshot from 2021-04-17 12-23-31](https://user-images.githubusercontent.com/62832487/115102841-d9dd0f80-9f77-11eb-9af9-128ccfdbb55d.png)
 </br>
 # Soal 3
 ## Penjelasan
