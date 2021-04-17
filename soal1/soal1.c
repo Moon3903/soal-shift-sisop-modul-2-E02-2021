@@ -44,21 +44,6 @@ void unzip(char *fileName, char *projectPath, char *folderName){
     }
 }
 
-// void removeZip(char *fileName, char *projectPath){
-//     pid_t child = fork();
-//     if(child < 0) exit(EXIT_FAILURE);
-//     else if(child == 0){
-//         char filePath[150];
-//         strcpy(filePath,projectPath);
-//         strcat(filePath,fileName);
-//         char *args[] = {"rm", filePath, NULL};
-//         execv("/bin/rm",args);
-//     }else{
-//         int status;
-//         while((wait(&status)) > 0);
-//     }
-// }
-
 int main(){
     pid_t child, childSID;
 
@@ -115,11 +100,7 @@ int main(){
                 unzip("Foto_for_Stevany.zip",projectPath,"Pyoto");
                 unzip("Musik_for_Stevany.zip",projectPath,"Musyik");
                 unzip("Film_for_Stevany.zip",projectPath,"Fylm");
-                // removeZip("Foto_for_Stevany.zip",projectPath);
-                // removeZip("Musik_for_Stevany.zip",projectPath);
-                // removeZip("Film_for_Stevany.zip",projectPath);
             }
-
         }
 
         if( strcmp(date,"09") == 0 && strcmp(month,"04") == 0 && strcmp(hour,"22") == 0 && strcmp(minute,"22") == 0 && strcmp(second,"00") == 0){
