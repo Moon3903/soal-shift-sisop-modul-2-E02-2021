@@ -44,6 +44,12 @@ if((chdir("/")) < 0) exit(EXIT_FAILURE);
 close(STDIN_FILENO);
 close(STDOUT_FILENO);
 close(STDERR_FILENO);
+
+...
+
+while(1){
+
+}
 ```
 Untuk menyelesaikan soal ini diperlukan proses yang dapat berjalan di background sehingga harus membuat daemon process terlebih dahulu.
 
@@ -204,7 +210,7 @@ while(1){
 
 }
 ```
-Mengambil bulan,tanggal,jam,menit, dan detik saat ini dengan menggunakan ``time_t``. Kemudian cek apakah waktu saat ini adalah ``9 April 16:22:00``. Jika ya, maka akan menjalan perintah zip. Untuk melakukan zip folder dan menghapus semua folder dapat menggunakan fork dan execv dengan perintah ``zip``, argumen ``-rm`` agar dapat melakukan zip seluruh isi folder, argumen berikutnya adalah nama zip yang akan dibuat, argumen setelahnya merupakan nama folder yang akan dizip.
+Mengambil bulan,tanggal,jam,menit, dan detik saat ini dengan menggunakan ``time_t``. Kemudian cek apakah waktu saat ini adalah ``9 April 22:22:00``. Jika ya, maka akan menjalan perintah zip. Untuk melakukan zip folder dan menghapus semua folder dapat menggunakan fork dan execv dengan perintah ``zip``, argumen ``-rm`` agar dapat melakukan zip seluruh isi folder, argumen berikutnya adalah nama zip yang akan dibuat, argumen setelahnya merupakan nama folder yang akan dizip.
 
 
 # Soal 2
@@ -465,6 +471,12 @@ if((chdir("/")) < 0) exit(EXIT_FAILURE);
 close(STDIN_FILENO);
 close(STDOUT_FILENO);
 close(STDERR_FILENO);
+
+...
+
+while(1){
+	...
+}
 ```
 Untuk menyelesaikan soal ini diperlukan proses yang dapat berjalan di background sehingga harus membuat daemon process terlebih dahulu.
 
