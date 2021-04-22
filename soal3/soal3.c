@@ -157,8 +157,6 @@ int main(int argc, char *argv[]){
             }
             exit(EXIT_SUCCESS);
         }else{
-            int status4;
-            while((wait(&status4)) > 0);
             sleep(40);
         }
     }
