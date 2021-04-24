@@ -659,6 +659,9 @@ while(1){
 - Mode kedua ``-x``
 ![Mode2](https://user-images.githubusercontent.com/68326540/115941221-abf35000-a4ce-11eb-815a-2789e3178c3b.png)
 
-
+# Kendala
+Soal 1 : Kesulitan melakukan debug, karena semua prosesnya merupakan daemon process.
+Soal 2 : -
+Soal 3 : Kesulitan melakukan debug, karena semua prosesnya merupakan daemon process. Sehingga jika terjadi error tidak tahu perintah apa yang error. Selain itu juga ada kesalahan penafsiran untuk soal 3a.
 
 
