@@ -212,6 +212,11 @@ while(1){
 ```
 Mengambil bulan,tanggal,jam,menit, dan detik saat ini dengan menggunakan ``time_t``. Kemudian cek apakah waktu saat ini adalah ``9 April 22:22:00``. Jika ya, maka akan menjalan perintah zip. Untuk melakukan zip folder dan menghapus semua folder dapat menggunakan fork dan execv dengan perintah ``zip``, argumen ``-rm`` agar dapat melakukan zip seluruh isi folder, argumen berikutnya adalah nama zip yang akan dibuat, argumen setelahnya merupakan nama folder yang akan dizip.
 
+### Hasil
+![Hasil1-1](https://user-images.githubusercontent.com/68326540/115941523-e4475e00-a4cf-11eb-9b87-7b9f0c011fc7.png)
+![Hasil1-2](https://user-images.githubusercontent.com/68326540/115941548-f75a2e00-a4cf-11eb-8554-f4bef9cba753.png)
+
+
 
 # Soal 2
 ## Penjelasan
@@ -650,10 +655,12 @@ while(1){
 ```
 
 ### Hasil
-- Mode pertama
-![Mode1](https://user-images.githubusercontent.com/68326540/115038022-52e95200-9ef9-11eb-92ff-f0bf8c7b8193.png)
-- Mode kedua
-![Mode2](https://user-images.githubusercontent.com/68326540/115038220-83c98700-9ef9-11eb-929b-69d17d111886.png)
+- Mode pertama ``-z``
+![Mode1](https://user-images.githubusercontent.com/68326540/115941065-093ad180-a4ce-11eb-928d-fe00dba2dc5c.png)
+
+- Mode kedua ``-x``
+![Mode2](https://user-images.githubusercontent.com/68326540/115941221-abf35000-a4ce-11eb-815a-2789e3178c3b.png)
+
 
 
 
