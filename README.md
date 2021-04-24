@@ -513,8 +513,6 @@ while(1){
 		}
 		...
 	}else{
-            int status4;
-            while((wait(&status4)) > 0);
             sleep(40);
         }
 }
